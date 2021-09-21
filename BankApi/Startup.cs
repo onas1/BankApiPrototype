@@ -36,6 +36,8 @@ namespace BankApi
                 options.UseSqlServer(Configuration.GetConnectionString("BankApiDbContext")));
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ITransactionService, TransactionService>();
+            services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+            services.AddScoped<IAuthService, AuthService>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
@@ -53,7 +55,7 @@ namespace BankApi
                     ValidateIssuerSigningKey = true,
                     //ValidAudience = Configuration["JWT: Issuer"],
                     //ValidIssuer = Configuration["JWT: Issuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT: Key"]))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("JWT:Key").Value))
 
                 });
             services.AddSwaggerGen(options =>
@@ -89,12 +91,12 @@ namespace BankApi
                 {
                     Title = "Onas NetCore banking API doc",
                     Version = "v1",
-                    Description = " A bank APi Prototype build with .net core.",
+                    Description = " A bank Api Prototype build with .net core.",
                     Contact = new Microsoft.OpenApi.Models.OpenApiContact
                     {
                         Name = "Iriajen Onas",
                         Email = "Iriajenfrancis@gmail.com",
-                        Url = new Uri("https://meetonas.azurewebsites.net/")
+                        Url = new Uri("https://meetonas.herokuapp.com/")
                     }
 
 

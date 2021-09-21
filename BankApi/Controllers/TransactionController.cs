@@ -2,11 +2,13 @@
 using BankApi.DTOS;
 using BankApi.Models;
 using BankApi.Service.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
 
 namespace BankApi.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class TransactionController : ControllerBase

@@ -1,12 +1,14 @@
 ﻿using BankApi.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace BankApi.DTOS
 {
     public class GetAccountDTO
     {
         [Key]
+        [JsonIgnore]
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

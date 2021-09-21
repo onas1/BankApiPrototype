@@ -15,6 +15,8 @@ namespace BankApi.Models
 
         [Key]
         public int Id { get; set; }
+        public int AccountId { get; set; }
+        public Account Account { get; set; }
         public string TransactionUniqueReference { get; set; } // this will generate in every instance of this class
         public decimal TransactionAmount { get; set; }
         public TranStatus TransactionStatus { get; set; }

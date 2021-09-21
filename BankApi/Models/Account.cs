@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -11,12 +12,17 @@ namespace BankApi.Models
         private Random rand = new Random();
         public Account()
         {
-            AccountName = $"{FirstName} {LastName}";
+            //AccountName = $"{FirstName} {LastName}";
 
             AccountNumberGenerated = Convert.ToString((long)Math.Floor((rand.NextDouble() * 9_000_000_000L + 1_000_000_000L))); // did 9_000_000_000 so we can have a ten digit random number
         }
         [Key]
         public int Id { get; set; }
+
+        public string AppuserId { get; set; }
+
+        public AppUser AppUser { get; set; }
+        public List<Transaction> Transaction { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string AccountName { get; set; }

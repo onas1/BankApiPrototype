@@ -1,20 +1,24 @@
 ﻿using BankApi.DAL;
 using BankApi.Models;
 using BankApi.Service.Abstractions;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BankApi.Service.Implementation
 {
     public class AccountService : IAccountService
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly UserManager<AppUser> _userManager;
 
-        public AccountService(ApplicationDbContext DbContext)
+        public AccountService(ApplicationDbContext DbContext, UserManager<AppUser> userManager)
         {
             _dbContext = DbContext;
+            _userManager = userManager;
         }
 
 
@@ -23,7 +27,7 @@ namespace BankApi.Service.Implementation
         {
             //lets make authentication
             //check if account exit for account number
-            var account = _dbContext.Accounts.Where(x => x.AccountNumberGenerated == AccountNumber).SingleOrDefault();
+            var account = _dbContext.Accounts.SingleOrDefault(x => x.AccountNumberGenerated == AccountNumber);
             if (account == null)
                 return null;
 
@@ -52,12 +56,12 @@ namespace BankApi.Service.Implementation
             return true;
         }
 
-        public IEnumerable<Account> GetAllAccounts()
+        public IEnumerable<Account> GetAllAccounts(string userId)
         {
-            return _dbContext.Accounts.ToList();
+            return _dbContext.Accounts.Where(x => x.AppUser.Id == userId).ToList();
         }
 
-        public Account Create(Account account, string Pin, string ConfirmPin)
+        public async Task<Account> Create(Account account, string userId, string Pin, string ConfirmPin)
         {
             //this is to create a new account
             if (_dbContext.Accounts.Any(x => x.Email == account.Email))
@@ -71,8 +75,11 @@ namespace BankApi.Service.Implementation
             account.PinSalt = pinSalt;
 
             //add account to db
+            var user = await _userManager.FindByIdAsync(userId);
+            user.Account.Add(account);
             _dbContext.Accounts.Add((account));
-            _dbContext.SaveChanges();
+
+            await _dbContext.SaveChangesAsync();
 
             return account;
         }
@@ -131,9 +138,9 @@ namespace BankApi.Service.Implementation
 
         }
 
-        public void Delete(int Id)
+        public void Delete(int id)
         {
-            var account = _dbContext.Accounts.Find(Id);
+            var account = _dbContext.Accounts.Find(id);
             if (account != null)
             {
                 _dbContext.Accounts.Remove((account));
@@ -146,9 +153,9 @@ namespace BankApi.Service.Implementation
             return _dbContext.Accounts.FirstOrDefault(a => a.Id == Id);
         }
 
-        public Account GetByAccountNumber(string AccountNumber)
+        public Account GetByAccountNumber(string accountNumber)
         {
-            return _dbContext.Accounts.FirstOrDefault(a => a.AccountNumberGenerated == AccountNumber);
+            return _dbContext.Accounts.FirstOrDefault(a => a.AccountNumberGenerated == accountNumber);
         }
     }
 }

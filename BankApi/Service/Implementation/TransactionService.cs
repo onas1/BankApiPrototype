@@ -55,7 +55,7 @@ namespace BankApi.Service.Implementation
             Transaction transaction = new Transaction();
 
             //first check that user account owner is valid,
-            //we will need authenticatethe user
+            //we will need authenticate the user
             var authUser = _accountService.Authenticate(AccountNumber, TransactionPin);
             if (authUser == null) throw new ApplicationException("Invalid Credentials");
 
@@ -80,7 +80,7 @@ namespace BankApi.Service.Implementation
                 }
                 else
                 {
-                    // so transaction uncessful
+                    // so transaction unsuccessful
                     transaction.TransactionStatus = TranStatus.Failed;
                     response.ResponseCode = "02";
                     response.ResponseMessage = "Transaction failed!";
@@ -121,8 +121,8 @@ namespace BankApi.Service.Implementation
             Account destinationAccount;
             Transaction transaction = new Transaction();
 
-            //first chect that user account owner is valid,
-            //we will need authenticatethe user
+            //first check that user account owner is valid,
+            //we will need authenticate the user
             var authUser = _accountService.Authenticate(AccountNumber, TransactionPin);
             if (authUser == null) throw new ApplicationException("Invalid Credentials");
 
@@ -188,7 +188,7 @@ namespace BankApi.Service.Implementation
             Transaction transaction = new Transaction();
 
             //first chect that user account owner is valid,
-            //we will need authenticatethe user
+            //we will need authenticate the user
             var authUser = _accountService.Authenticate(FromAccount, TransactionPin);
             if (authUser == null) throw new ApplicationException("Invalid Credentials");
 
@@ -213,7 +213,7 @@ namespace BankApi.Service.Implementation
                 }
                 else
                 {
-                    // so transaction uncessful
+                    // so transaction unsuccessful
                     transaction.TransactionStatus = TranStatus.Failed;
                     response.ResponseCode = "02";
                     response.ResponseMessage = "Transaction failed!";
